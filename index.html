@@ -49,6 +49,17 @@
     </nav>
   </header>
 <main>
+
+  <h2>Leave a Message</h2>
+  <form id="messageForm">
+    <input type="text" id="name" placeholder="Your name" required><br><br>
+    <textarea id="message" placeholder="Your message" required></textarea><br><br>
+    <button type="submit">Post</button>
+  </form>
+
+  <h3>Messages:</h3>
+  <div id="messages"></div>
+
   <p></p>
   <h2>Lotte on X (click the sprite)</h2>
   <a href="https://x.com/lotterecords" target="_blank" style="display: block;">
@@ -63,6 +74,57 @@
 
   <footer>
     <p>&copy; 2025, the ultimate in musical crochet, property of Nick D</p>
+    <p>
+   <div id="sfcqfd5rqylt7jdfnq6xtdptbe2dz2uqcrq"></div> <script type="text/javascript" src="https://counter1.optistats.ovh/private/counter.js?c=qfd5rqylt7jdfnq6xtdptbe2dz2uqcrq&down=async" async></script> <br><a href="https://www.freecounterstat.com">website counter</a><noscript><a href="https://www.freecounterstat.com" title="website counter"><img src="https://counter1.optistats.ovh/private/freecounterstat.php?c=qfd5rqylt7jdfnq6xtdptbe2dz2uqcrq" border="0" title="website counter" alt="website counter"></a></noscript> 
+  </p>
+
   </footer>
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
+<script>
+  // Replace with your actual Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyDgMA4VKfxIkH3pDrGhUFHjdIjHR3NsOnQ",
+    authDomain: "lotte-records.firebaseapp.com",
+    databaseURL: "https://lotte-records-default-rtdb.firebaseio.com",
+    projectId: "lotte-records",
+    storageBucket: "lotte-records.firebasestorage.app",
+    messagingSenderId: "211694335965",
+    appId: "1:211694335965:web:656036b03e5d45ec136834"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  const form = document.getElementById('messageForm');
+  const nameInput = document.getElementById('name');
+  const messageInput = document.getElementById('message');
+  const messagesDiv = document.getElementById('messages');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const name = nameInput.value;
+    const message = messageInput.value;
+    const timestamp = new Date().toLocaleString();
+
+    db.ref('messages').push({
+      name,
+      message,
+      timestamp
+    });
+
+    form.reset();
+  });
+
+  db.ref('messages').on('child_added', function(snapshot) {
+    const data = snapshot.val();
+    const msgEl = document.createElement('p');
+    msgEl.textContent = `${data.name} (${data.timestamp}): ${data.message}`;
+    messagesDiv.prepend(msgEl);
+  });
+</script>
+
 </body>
 </html>
