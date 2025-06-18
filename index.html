@@ -50,15 +50,18 @@
   </header>
 <main>
 
-  <h2>Leave a Message</h2>
-  <form id="messageForm">
-    <input type="text" id="name" placeholder="Your name" required><br><br>
-    <textarea id="message" placeholder="Your message" required></textarea><br><br>
-    <button type="submit">Post</button>
-  </form>
+  <!-- Message Board Section -->
+  <section style="background: #fff0f9; border: 2px solid #cc66cc; border-radius: 10px; padding: 1.5em; margin-top: 3em;">
+    <h2>Leave a Message</h2>
+    <form id="messageForm">
+      <input type="text" id="name" placeholder="Your name" required style="width: 80%; padding: 0.5em;"><br><br>
+      <textarea id="message" placeholder="Your message" required style="width: 80%; height: 100px; padding: 0.5em;"></textarea><br><br>
+      <button type="submit" style="padding: 0.5em 1em;">Post</button>
+    </form>
 
-  <h3>Messages:</h3>
-  <div id="messages"></div>
+    <h3>Messages:</h3>
+    <div id="messages" style="text-align: left;"></div>
+  </section>
 
   <p></p>
   <h2>Lotte on X (click the sprite)</h2>
@@ -120,9 +123,15 @@
 
   db.ref('messages').on('child_added', function(snapshot) {
     const data = snapshot.val();
-    const msgEl = document.createElement('p');
-    msgEl.textContent = `${data.name} (${data.timestamp}): ${data.message}`;
-    messagesDiv.prepend(msgEl);
+  const msgEl = document.createElement('div');
+msgEl.innerHTML = `
+  <p style="margin-bottom: 0.3em;">
+    <strong>${data.name}</strong> <em>(${data.timestamp})</em>: ${data.message}
+  </p>
+  <hr style="border: 0; border-top: 1px solid #ccc; margin: 0.5em 0;">
+`;
+messagesDiv.prepend(msgEl);
+
   });
 </script>
 
