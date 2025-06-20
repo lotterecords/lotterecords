@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Jacquarda+Bastarda+9&display=swap" rel="stylesheet">
   <title>Lotte Records</title>
   <style>
     body {
@@ -12,6 +13,8 @@
       color: #333;
     }
     header {
+      font-family: 'Jacquarda Bastarda 9', serif;
+  font-size: 1em;
       background: #f3c5ff;
       color: rgb(0, 0, 0);
       padding: 1em;
@@ -37,6 +40,7 @@
       bottom: 0;
       width: 100%;
     }
+
   </style>
 </head>
 <body>
@@ -50,12 +54,16 @@
   </header>
 <main>
 
+
+  <!-- Promo + Message Board Side-by-Side -->
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2em; margin-top: 3em;">
+
   <!-- Message Board Section -->
-  <section style="background: #fff0f9; border: 2px solid #cc66cc; border-radius: 10px; padding: 1.5em; margin-top: 3em;">
+  <section style="background: #fff0f9; border: 2px solid #cc66cc; border-radius: 10px; padding: 1.5em; width: 500px;">
     <h2>Leave a Message</h2>
     <form id="messageForm">
-      <input type="text" id="name" placeholder="Your name" required style="width: 80%; padding: 0.5em;"><br><br>
-      <textarea id="message" placeholder="Your message" required style="width: 80%; height: 100px; padding: 0.5em;"></textarea><br><br>
+      <input type="text" id="name" placeholder="Your name" required style="width: 100%; padding: 0.5em;"><br><br>
+      <textarea id="message" placeholder="Your message" required style="width: 100%; height: 100px; padding: 0.5em;"></textarea><br><br>
       <button type="submit" style="padding: 0.5em 1em;">Post</button>
     </form>
 
@@ -63,15 +71,28 @@
     <div id="messages" style="text-align: left;"></div>
   </section>
 
+  <!-- Recent Release Promo -->
+  <section style="background-color: #cce5ff; border: 2px solid #3399ff; border-radius: 10px; padding: 1.5em; width: 300px; text-align: center;">
+    <h2 style="color: #003366;">🎉 Monsieur le Duc presents: <i>European Vacation</i></h2>
+     <a href="https://open.spotify.com/album/1fEabMA0IsW4CWeK2yncbC?si=hiJkboWeQrmrmbJJWOOgkw" target="_blank">
+    <img src="EV.jpg" alt="Album Cover" style="width: 100%; border: 4px solid #003366; border-radius: 10px; margin-top: 1em;"></a>
+    <p style="font-size: 1.1em; color: #003366; margin-top: 1em;">
+      <strong></strong><br>
+      Join <B>le Duc</B> for a few brief rounds of double dutch around the Old World. Together, learn French, German, Spanish, Italian and even a little compassion with the reclusive copycat! Inspired by the fragrant droppings of Brezel Göring, the explosions of Richard Mortensen, and the execution of Chevy Chase, <i>European Vacation</i> leaves one absolutely exhausted, perfectly simulating the malaise which follows one's travels abroad! Click the cover to listen <b>now!</b>
+    </p>
+  </section>
+
+</div>
+
   <p></p>
   <h2>Lotte on X (click the sprite)</h2>
   <a href="https://x.com/lotterecords" target="_blank" style="display: block;">
-    <img src="twitter.png" alt="Lotte on Twitter" style="width: 60px; height: 60px;">
+    <img src="twitter.jpg" alt="Lotte on Twitter" style="width: 60px; height: 60px;">
   </a>
   <br>
   <h2>Lotte on Instagram (click the sprite)</h2>
   <a href="https://instagram.com/lotterecords" target="_blank" style="display: block;">
-    <img src="twitter.png" alt="Lotte on Instagram" style="width: 60px; height: 60px;">
+    <img src="twitter.jpg" alt="Lotte on Instagram" style="width: 60px; height: 60px;">
   </a>
 </main>
 
