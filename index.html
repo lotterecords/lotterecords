@@ -40,15 +40,29 @@
       bottom: 0;
       width: 100%;
     }
-    #neologism-banner {
-  background-color: #f5e663;
-  color: #222;
-  padding: 0.75em 1em;
-  font-family: 'Georgia', serif;
-  font-size: 1.2em;
+#daily-neologism {
+  background: #fffbe6;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1em 1.5em;
+  margin: 1.5em auto;
+  max-width: 900px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   text-align: center;
-  font-style: italic;
-  border-bottom: 1px solid #ccc;
+}
+
+#daily-neologism h2 {
+  margin: 0 0 0.5em 0;
+  font-family: 'Georgia', serif;
+  font-size: 1.4em;
+  color: #444;
+}
+
+#neologism-word {
+  font-size: 1.8em;
+  font-weight: bold;
+  font-family: 'Georgia', serif;
+  color: #222;
 }
 
 
@@ -61,10 +75,17 @@
       <a href="music.html">Music</a>
       <a href="visual.html">Visual Art</a>
       <a href="blog.html">Blog</a>
+      <a href="mailto:lotterecords@gmail.com">Email</a>
     </nav>
   </header>
 <main>
 
+  <!-- Neologism -->
+<section id="daily-neologism">
+  <h2 id="neologism-heading">The 9 A.M. Neologism for </h2>
+  <p id="neologism-word">Loading...</p>
+  <p>But what could it possibly mean? Let us know on <a href="https://x.com/lotterecords">X</a> or <a href="https://instagram.com/lotterecords">Instagram</a>!</p>
+</section>
 
   <!-- Promo + Message Board Side-by-Side -->
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2em; margin-top: 3em;">
@@ -94,18 +115,6 @@
   </section>
 
 </div>
-
-  <p></p>
-  <h2>Lotte on X (click the sprite)</h2>
-  <a href="https://x.com/lotterecords" target="_blank" style="display: block;">
-    <img src="twitter.jpg" alt="Lotte on Twitter" style="width: 60px; height: 60px;">
-  </a>
-  <br>
-  <h2>Lotte on Instagram (click the sprite)</h2>
-  <a href="https://instagram.com/lotterecords" target="_blank" style="display: block;">
-    <img src="twitter.jpg" alt="Lotte on Instagram" style="width: 60px; height: 60px;">
-  </a>
-</main>
 
   <footer>
     <p>&copy; 2025, the ultimate in musical crochet, property of Nicholas</p>
@@ -169,12 +178,17 @@ messagesDiv.prepend(msgEl);
   fetch('neologism.txt')
     .then(res => res.text())
     .then(text => {
-      document.getElementById('neologism-banner').textContent = `Today's Neologism: ${text}`;
+      document.getElementById('neologism-word').textContent = text;
     })
     .catch(() => {
-      document.getElementById('neologism-banner').textContent = 'Neologism unavailable.';
+      document.getElementById('neologism-word').textContent = 'Unavailable';
     });
+      // Insert the current date in the heading
+  const now = new Date();
+  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const formattedDate = now.toLocaleDateString(undefined, options);
+  document.getElementById('neologism-heading').textContent = `The 9 A.M. Neologism for ${formattedDate}`;
 </script>
 </body>
-<div id="neologism-banner">Loading neologism...</div>
+
 </html>
