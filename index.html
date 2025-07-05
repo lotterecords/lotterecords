@@ -40,6 +40,17 @@
       bottom: 0;
       width: 100%;
     }
+    #neologism-banner {
+  background-color: #f5e663;
+  color: #222;
+  padding: 0.75em 1em;
+  font-family: 'Georgia', serif;
+  font-size: 1.2em;
+  text-align: center;
+  font-style: italic;
+  border-bottom: 1px solid #ccc;
+}
+
 
   </style>
 </head>
@@ -154,6 +165,16 @@ messagesDiv.prepend(msgEl);
 
   });
 </script>
-
+<script>
+  fetch('neologism.txt')
+    .then(res => res.text())
+    .then(text => {
+      document.getElementById('neologism-banner').textContent = `Today's Neologism: ${text}`;
+    })
+    .catch(() => {
+      document.getElementById('neologism-banner').textContent = 'Neologism unavailable.';
+    });
+</script>
 </body>
+<div id="neologism-banner">Loading neologism...</div>
 </html>
