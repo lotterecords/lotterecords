@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Neologism Dictionary</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #d2b9a9;
+      color: #222;
+      padding: 2em;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 1em;
+    }
+
+    .controls {
+      text-align: center;
+      margin-bottom: 1.5em;
+    }
+
+    .entry {
+      border-bottom: 1px solid #ccc;
+      padding: 1em 0;
+    }
+
+    .word {
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+
+    .date {
+      font-style: italic;
+      font-size: 0.9em;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>The Lotte New Dictionary</h1>
+  <h3>Deep, deep beneath the mantle of the Earth, a slave named Raspberry is tirelessly struggling to create definitions for our daily neologisms. Since he can not die, we intend for Raspberry to compile enough definitions in The Lotte New Dictionary to outrank the Oxford English Dictionary as the world's longest. At the current rate, it should take ~ 164 years to do so but (with necessary pressure being dutifully applied) we hope that we can create efficencies to allow us directors to see our special New Dictionary crowned king while still alive.</h3>
+  <h4>You may sort by date or alphabetically.</h4>
+
+  <div class="controls">
+    <button onclick="sortByDate()">Sort by Date</button>
+    <button onclick="sortByWord()">Sort Alphabetically</button>
+  </div>
+
+  <div id="entries">Loading...</div>
+
+  <script>
+    let entries = [];
+
+    async function loadDefinitions() {
+      const res = await fetch('defined_neologisms.txt');
+      const text = await res.text();
+
+      const lines = text.trim().split('\n').filter(line => line.trim() !== '');
+      for (let i = 0; i < lines.length; i += 3) {
+        entries.push({
+          date: lines[i],
+          word: lines[i + 1],
+          definition: lines[i + 2]
+        });
+      }
+
+      sortByDate(); // Initial render
+    }
+
+    function render(list) {
+      const entriesDiv = document.getElementById('entries');
+      entriesDiv.innerHTML = '';
+      for (const e of list) {
+        entriesDiv.innerHTML += `
+          <div class="entry">
+            <div class="word">${e.word}</div>
+            <div class="date">${e.date}</div>
+            <div class="definition">${e.definition}</div>
+          </div>
+        `;
+      }
+    }
+
+    function sortByDate() {
+      const sorted = [...entries].sort((a, b) => new Date(b.date) - new Date(a.date));
+      render(sorted);
+    }
+
+    function sortByWord() {
+      const sorted = [...entries].sort((a, b) => a.word.localeCompare(b.word));
+      render(sorted);
+    }
+
+    loadDefinitions();
+  </script>
+
+</body>
+</html>
