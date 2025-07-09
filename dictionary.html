@@ -28,24 +28,24 @@
       padding: 1em 0;
     }
 
-  .word {
+.word {
   font-weight: bold;
-  font-size: 1.5em;
-  margin-bottom: 0.3em;
+  font-size: 1.6em;
+  margin-bottom: 0.2em;
 }
 
 .date {
   font-style: italic;
-  font-size: 0.85em;
-  color: #6e6e6e;
-  margin-bottom: 0.8em;
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 0.5em;
 }
 
 .definition {
-  font-weight: normal;
   font-size: 1em;
   line-height: 1.5em;
-  margin-top: 0.5em;
+  white-space: normal;
+}
 }
   </style>
 </head>
@@ -90,24 +90,23 @@
 function render(list) {
   const entriesDiv = document.getElementById('entries');
   entriesDiv.innerHTML = '';
+  
   for (const e of list) {
-    const definitionLines = e.definition.split('\n');
-    const firstLine = definitionLines[0]; // This is the "bold" etymology line
-    const rest = definitionLines.slice(1).join('\n'); // The rest: example, definitions, etc.
+    const definitionLines = e.definition.split('\n').filter(line => line.trim() !== '');
+
+    // Remove first line (redundant if it repeats the word)
+    const trimmedDefinition = definitionLines.slice(1).join('\n');
 
     entriesDiv.innerHTML += `
       <div class="entry">
         <div class="word">${e.word}</div>
         <div class="date">${e.date}</div>
-        <div class="definition">
-          <strong>${firstLine}</strong>
-          <br><br>
-          ${rest.replace(/\n/g, '<br>')}
-        </div>
+        <div class="definition">${trimmedDefinition.replace(/\n/g, '<br>')}</div>
       </div>
     `;
   }
 }
+
 
 
     function sortByDate() {
