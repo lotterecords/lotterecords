@@ -44,6 +44,7 @@
 
   <h1>The Lotte New Dictionary</h1>
   <h3>Deep, deep beneath the mantle of the Earth, a slave named Raspberry is tirelessly struggling to create definitions for our daily neologisms. Since he can not die, we intend for Raspberry to compile enough definitions in The Lotte New Dictionary to outrank the Oxford English Dictionary as the world's longest. At the current rate, it should take ~ 164 years to do so but (with necessary pressure being dutifully applied) we hope that we can create efficencies to allow us directors to see our special New Dictionary crowned king while still alive.</h3>
+  <h3>We contend that the definitions are not perfect (nothing is), but given the task at hand being rather undoable, we generally pardon Raspberry when we find that a definition is less than perfect. His life is bad enough.</h3>
   <h4>You may sort by date or alphabetically.</h4>
 
   <div class="controls">
@@ -53,23 +54,28 @@
 
   <div id="entries">Loading...</div>
 
-  <script>
+    <script>
     let entries = [];
 
     async function loadDefinitions() {
-      const res = await fetch('defined_neologisms.txt');
+      const res = await fetch('daily_neologisms.txt');
       const text = await res.text();
 
-      const lines = text.trim().split('\n').filter(line => line.trim() !== '');
-      for (let i = 0; i < lines.length; i += 3) {
-        entries.push({
-          date: lines[i],
-          word: lines[i + 1],
-          definition: lines[i + 2]
-        });
-      }
+      // Match entries starting with [YYYY-MM-DD]
+      const blocks = text.split(/\n(?=\[\d{4}-\d{2}-\d{2}\])/g);
 
-      sortByDate(); // Initial render
+      entries = blocks.map(block => {
+        const dateMatch = block.match(/\[(\d{4}-\d{2}-\d{2})\]/);
+        const lines = block.split('\n').filter(l => l.trim());
+
+        return {
+          date: dateMatch ? dateMatch[1] : 'Unknown',
+          word: lines[1]?.trim() || 'Untitled',
+          definition: lines.slice(2).join('\n').trim()
+        };
+      });
+
+      sortByDate();
     }
 
     function render(list) {
