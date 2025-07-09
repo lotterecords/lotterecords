@@ -62,3 +62,8 @@ Definition:
 
 Example sentence:
 - An enpho of the ancient Greeks was a sound, a group of people.[0m
+
+[2025-07-09] ENPHONGENRAIONHYDR
+Enphongenraionhydr: A neologism composed of the Greek words "ên" (meaning "through") and "phono" (meaning "sound") to describe the process of transforming phonemes into phonograms through the use of a printer. An example sentence: "I transformed the sound 'a' into a phonogram on my printer."
+
+Definition of Enphongenraionhydr: A phonemic transcription method that involves using a printer to transform the sound of a word into a phonogram.[0m
