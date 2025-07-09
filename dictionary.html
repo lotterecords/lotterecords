@@ -30,7 +30,7 @@
 
 .word {
   font-weight: bold;
-  font-size: 1.6em;
+  font-size: 1.8em;
   margin-bottom: 0.2em;
 }
 
@@ -38,15 +38,22 @@
   font-style: italic;
   font-size: 0.9em;
   color: #666;
-  margin-bottom: 0.5em;
+  margin-bottom: 0.6em;
+}
+
+.intro {
+  font-weight: normal;
+  font-size: 1.1em;
+  margin-bottom: 0.8em;
+  line-height: 1.5em;
 }
 
 .definition {
   font-size: 1em;
-  line-height: 1.5em;
+  line-height: 1.6em;
   white-space: normal;
 }
-}
+
   </style>
 </head>
 <body>
@@ -90,22 +97,23 @@
 function render(list) {
   const entriesDiv = document.getElementById('entries');
   entriesDiv.innerHTML = '';
-  
-  for (const e of list) {
-    const definitionLines = e.definition.split('\n').filter(line => line.trim() !== '');
 
-    // Remove first line (redundant if it repeats the word)
-    const trimmedDefinition = definitionLines.slice(1).join('\n');
+  for (const e of list) {
+    const lines = e.definition.split('\n').filter(line => line.trim() !== '');
+    const introParagraph = lines[0];
+    const rest = lines.slice(1).join('<br>');
 
     entriesDiv.innerHTML += `
       <div class="entry">
         <div class="word">${e.word}</div>
         <div class="date">${e.date}</div>
-        <div class="definition">${trimmedDefinition.replace(/\n/g, '<br>')}</div>
+        <div class="intro">${introParagraph}</div>
+        <div class="definition">${rest}</div>
       </div>
     `;
   }
 }
+
 
 
 
