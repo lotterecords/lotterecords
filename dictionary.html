@@ -74,25 +74,29 @@
     let entries = [];
 
     async function loadDefinitions() {
-      const res = await fetch('daily_neologisms.txt');
-      const text = await res.text();
+  const res = await fetch('daily_neologisms.txt');
+  const text = await res.text();
 
-      // Match entries starting with [YYYY-MM-DD]
-      const blocks = text.split(/\n(?=\[\d{4}-\d{2}-\d{2}\])/g);
+  // Split into entry blocks
+  const blocks = text.split(/\n(?=\[\d{4}-\d{2}-\d{2}\])/g);
 
-      entries = blocks.map(block => {
-        const dateMatch = block.match(/\[(\d{4}-\d{2}-\d{2})\]/);
-        const lines = block.split('\n').filter(l => l.trim());
+  entries = blocks.map(block => {
+    const dateMatch = block.match(/\[(\d{4}-\d{2}-\d{2})\]/);
+    const lines = block.split('\n').filter(l => l.trim());
 
-        return {
-          date: dateMatch ? dateMatch[1] : 'Unknown',
-          word: lines[1]?.trim() || 'Untitled',
-          definition: lines.slice(2).join('\n').trim()
-        };
-      });
+    let date = dateMatch ? dateMatch[1] : 'Unknown';
+    let wordLine = lines.find(line => /^\*\*(.+)\*\*$/.test(line));
+    let word = wordLine ? wordLine.match(/^\*\*(.+)\*\*$/)[1].trim() : 'Untitled';
 
-      sortByDate();
-    }
+    // Remove date and word lines from definition
+    let contentLines = lines.filter(l => l !== `[${date}]` && l !== wordLine);
+    let definition = contentLines.join('\n').trim();
+
+    return { date, word, definition };
+  });
+
+  sortByDate();
+}
 
 function render(list) {
   const entriesDiv = document.getElementById('entries');
