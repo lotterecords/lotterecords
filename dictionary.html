@@ -100,20 +100,41 @@ function render(list) {
 
   for (const e of list) {
     const lines = e.definition.split('\n').filter(line => line.trim() !== '');
-    const introParagraph = lines[0];
-    const rest = lines.slice(1).join('<br>');
+
+    let intro = '';
+    let example = '';
+    let def = '';
+    let section = 'intro';
+
+    for (let line of lines) {
+      if (/^Example sentence[:：]?\s*$/i.test(line)) {
+        section = 'example';
+        continue;
+      } else if (/^Definition[:：]?\s*$/i.test(line)) {
+        section = 'definition';
+        continue;
+      }
+
+      if (section === 'intro') {
+        intro += line + ' ';
+      } else if (section === 'example') {
+        example += line + '<br>';
+      } else if (section === 'definition') {
+        def += line + '<br>';
+      }
+    }
 
     entriesDiv.innerHTML += `
       <div class="entry">
         <div class="word">${e.word}</div>
         <div class="date">${e.date}</div>
-        <div class="intro">${introParagraph}</div>
-        <div class="definition">${rest}</div>
+        <div class="intro">${intro.trim()}</div>
+        ${example ? `<div class="definition"><strong>Example sentence:</strong><br>${example}</div>` : ''}
+        ${def ? `<div class="definition"><strong>Definition:</strong><br>${def}</div>` : ''}
       </div>
     `;
   }
 }
-
 
 
 
