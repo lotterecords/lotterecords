@@ -5,7 +5,7 @@
   <title>Neologism Dictionary</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Times New Roman', Times, serif, sans-serif;
       background: #d2b9a9;
       color: #222;
       padding: 2em;
@@ -54,45 +54,152 @@
   white-space: normal;
 }
 
+#red-flash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  border: 10px solid transparent;
+  box-sizing: border-box;
+  z-index: 9999;
+  transition: border-color 0.2s ease;
+}
+#red-flash.flash {
+  border-color: red;
+}
+
+@keyframes danceAcross {
+  0% { left: -1200px; }
+  100% { left: 110%; }
+}
+
+#libertines.animate {
+  animation: danceAcross 10s linear forwards;
+}
+
+.libertine {
+  width: 500px;  /* or 32px, depending on your needs */
+  image-rendering: pixelated;
+}
+
   </style>
 </head>
 <body>
-
-  <h1>The Lotte New Dictionary</h1>
-  <h3>Deep, deep beneath the mantle of the Earth, a slave named Raspberry is tirelessly struggling to create definitions for our daily neologisms. Since he can not die, we intend for Raspberry to compile enough definitions in The Lotte New Dictionary to outrank the Oxford English Dictionary as the world's longest. At the current rate, it should take ~ 164 years to do so but (with necessary pressure being dutifully applied) we hope that we can create efficencies to allow us directors to see our special New Dictionary crowned king while still alive.</h3>
-  <h3>We accept that the definitions are not perfect (nothing is), but given the task at hand being rather undoable, we generally pardon Raspberry when we find that a definition is less than perfect. His life is bad enough.</h3>
+    <div id="achievement-banner" style="
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #220000;
+  color: #ffdddd;
+  padding: 12px 24px;
+  font-size: 1.2em;
+  font-family: monospace;
+  font-weight: bold;
+  border: 2px solid #880000;
+  border-radius: 6px;
+  z-index: 10000;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+">
+  Achievement Unlocked: Marquis de Who?
+</div>
+<div id="red-flash"></div>
+<div id="libertines" style="
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  left: -500px;
+  z-index: 9999;
+  gap: 10px;
+">
+  <img src="libertine1.png" class="libertine">
+  <img src="libertine2.png" class="libertine">
+  <img src="libertine3.png" class="libertine">
+  <img src="libertine4.png" class="libertine">
+</div>
+<audio id="scream-player"></audio>
+<div id="raspberry-counter" style="
+  display: none;
+  position: fixed;
+  top: 10px;
+  right: 20px;
+  background: rgba(139, 0, 0, 0.85);
+  color: white;
+  padding: 10px 15px;
+  font-weight: bold;
+  font-size: 1.1em;
+  border-radius: 6px;
+  z-index: 9999;
+  font-family: monospace;
+">
+  Raspberry punished: <span id="raspberry-count">0</span> times
+</div>
+  <h1>The Lotte English Neo-Dictionary</h1>
+  <h3>Deep, deep beneath the mantle of the Earth, a slave named Raspberry is helplessly struggling to figure out the meanings for our daily neologisms. Since he can not die, we intend for Raspberry to compile enough definitions in The Lotte English Neo-Dictionary to outrank the current Oxford English Dictionary (~600,000+ entries and sub-entries) as the world's longest. At the current rate, it should take old Raspberry ~ 164 years to do so but we expect that we can create efficencies to allow us to see our special New Dictionary crowned most-comprehensive while we still breathe air.</h3>
+  <h3>We accept that the definitions are not always perfect (what is?), and in fact Raspberry is prone to lying, looping and losing his mind (who isn't?), but Lotte has decided, given that the task at hand is rather undoable, we generally pardon Raspberry when we find that a definition is less than perfect. His life is bad enough.</h3>
+  <h3>
+  However, out of respect to our patrons, we would like to allow you all the ability to 
+  <a href="#" onclick="attackRaspberry(); return false;" style="color: darkred; font-weight: bold; text-decoration: underline;">
+    punish Raspberry
+  </a>, at your own discretion, if you find the definitions below are not to your liking.
+</h3>
+  
   <h4>You may sort by date or alphabetically.</h4>
 
-  <div class="controls">
-    <button onclick="sortByDate()">Sort by Date</button>
-    <button onclick="sortByWord()">Sort Alphabetically</button>
-  </div>
+  <div id="raspberry-attack" style="color: darkred; font-weight: bold; margin-bottom: 1em;"></div>
+
+<div class="controls">
+  <button onclick="sortByDate()">Sort by Date</button>
+  <button onclick="sortByWord()">Sort Alphabetically</button>
+</div>
+
+
 
   <div id="entries">Loading...</div>
 
     <script>
     let entries = [];
 
-    async function loadDefinitions() {
-      const res = await fetch('daily_neologisms.txt');
-      const text = await res.text();
+async function loadDefinitions() {
+  const res = await fetch('daily_neologisms.txt');
+  const text = await res.text();
 
-      // Match entries starting with [YYYY-MM-DD]
-      const blocks = text.split(/\n(?=\[\d{4}-\d{2}-\d{2}\])/g);
+  const blocks = text.split(/\n(?=\[\d{4}-\d{2}-\d{2}\])/g);
 
-      entries = blocks.map(block => {
-        const dateMatch = block.match(/\[(\d{4}-\d{2}-\d{2})\]/);
-        const lines = block.split('\n').filter(l => l.trim());
+  entries = blocks.map(block => {
+    const dateMatch = block.match(/\[(\d{4}-\d{2}-\d{2})\]/);
+    const date = dateMatch ? dateMatch[1] : 'Unknown';
+    const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
 
-        return {
-          date: dateMatch ? dateMatch[1] : 'Unknown',
-          word: lines[1]?.trim() || 'Untitled',
-          definition: lines.slice(2).join('\n').trim()
-        };
-      });
+    // Try to find a line like **Word** or \**Word**
+    let wordLine = lines.find(line => /\*{2}.*\*{2}/.test(line));
+    let word = 'Untitled';
 
-      sortByDate();
+    if (wordLine) {
+      // Remove any leading slashes or brackets
+      const clean = wordLine.replace(/^[\\\[]*/, '').replace(/[\\\]]*$/, '');
+      const match = clean.match(/\*{2}(.*?)\*{2}/);
+      if (match && match[1]) word = match[1].trim();
     }
+
+    // Clean definition (everything except date and word line)
+    const contentLines = lines.filter(
+      l => l !== `[${date}]` && !/\*{2}.*\*{2}/.test(l)
+    );
+
+    return {
+      date,
+      word,
+      definition: contentLines.join('\n').replace(/\[0m/g, '').trim()
+    };
+  });
+
+  sortByDate();
+}
 
 function render(list) {
   const entriesDiv = document.getElementById('entries');
@@ -100,22 +207,41 @@ function render(list) {
 
   for (const e of list) {
     const lines = e.definition.split('\n').filter(line => line.trim() !== '');
-    const introParagraph = lines[0];
-    const rest = lines.slice(1).join('<br>');
+
+    let intro = '';
+    let example = '';
+    let def = '';
+    let section = 'intro';
+
+    for (let line of lines) {
+      if (/^Example sentence[:：]?\s*$/i.test(line)) {
+        section = 'example';
+        continue;
+      } else if (/^Definition[:：]?\s*$/i.test(line)) {
+        section = 'definition';
+        continue;
+      }
+
+      if (section === 'intro') {
+        intro += line + ' ';
+      } else if (section === 'example') {
+        example += line + '<br>';
+      } else if (section === 'definition') {
+        def += line + '<br>';
+      }
+    }
 
     entriesDiv.innerHTML += `
       <div class="entry">
         <div class="word">${e.word}</div>
         <div class="date">${e.date}</div>
-        <div class="intro">${introParagraph}</div>
-        <div class="definition">${rest}</div>
+        <div class="intro">${intro.trim()}</div>
+        ${example ? `<div class="definition"><strong>Example sentence:</strong><br>${example}</div>` : ''}
+        ${def ? `<div class="definition"><strong>Definition:</strong><br>${def}</div>` : ''}
       </div>
     `;
   }
 }
-
-
-
 
     function sortByDate() {
       const sorted = [...entries].sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -130,5 +256,136 @@ function render(list) {
     loadDefinitions();
   </script>
 
+<script>
+const screamCount = 20;
+let raspberryPunished = 0;
+let counterShown = false;
+const actions = [
+  "slap", "kick", "punch", "stab", "headbutt", "tickle", "bite", "karate chop", "roundhouse", "uppercut",
+  "jab", "spank", "throttle", "strangle", "smack", "pummel", "bludgeon", "body slam", "clothesline", "elbow drop",
+  "backhand", "eye poke", "face slap", "poke", "knee", "shove", "push", "boot", "trip", "scythe",
+  "gouge", "pinch", "nipple twist", "nose flick", "dropkick", "bear hug", "sucker punch", "gut punch", "nut shot", "whack",
+  "sweep", "axe kick", "heel stomp", "crescent kick", "dragon punch", "shin smash", "chair throw", "head bonk", "kneecap bash", "ear flick",
+  "bap", "boop", "thwack", "whip", "twist", "sock", "spear", "claw", "hammer fist", "thrust",
+  "tickle torture", "elbow", "slap fight", "boot to the head", "monkey punch", "nunchuck smack", "fork jab", "broom whack", "bat swipe", "mop swing",
+  "pie throw", "table flip", "ink squirt", "banana peel drop", "windmill punch", "slingshot", "lawn dart toss", "rubber band snap", "headlock", "noogie",
+  "wedgie", "atomic wedgie", "pants yank", "sand throw", "rock lob", "shield bash", "tail whip", "paper cut", "scroll smack", "chalkboard scrape",
+  "melodramatic slap", "glove slap", "powder puff", "sneeze", "vuvuzela blast", "sock full of coins", "anvil drop", "harpoon jab", "scroll roll", "megaphone screech", "bludgeon", "stab", "impale", "pummel", "maim", "shatter", "gouge", "crush", "disfigure", "lacerate",
+  "fracture", "slice", "slash", "burn", "cleave", "hammer", "smash", "bash", "scorch", "wrench",
+  "mutilate", "sunder", "twist", "scald", "claw", "rip", "tear", "rake", "shank", "club",
+  "carve", "batter", "whip", "saw", "bore", "dislocate", "flay", "strike", "bruise", "bruise repeatedly",
+  "squeeze", "ram", "twist violently", "rupture", "grind", "gnaw", "beat", "slit", "stab repeatedly", "slice deeply",
+  "snap", "punch through", "bust", "crack", "slam", "pierce", "gash", "dent", "sear", "twist backward",
+  "hack", "hurl into", "pound", "drive into", "clobber", "bore into", "scorch brutally", "scrape", "scar", "slice clean through",
+  "tear into", "stab cleanly", "hurl", "stomp on", "strike hard", "strike repeatedly", "drag across", "mangle", "press into", "ram hard",
+  "slam down onto", "grind into", "tear clean off", "bite", "wrench out", "slam a fist into", "shove a blade into", "drive a nail into", "hurl a rock at", "kick savagely",
+  "break", "snap cleanly", "skewer", "dislocate violently", "tear open", "bash repeatedly", "slam a hammer into", "drill into", "fling violently", "blowtorch"
+];
+
+const bodyParts = [
+  "eye", "nose", "ear", "mouth", "tooth", "tongue", "jaw", "chin", "cheek", "forehead",
+  "skull", "neck", "throat", "shoulder", "collarbone", "chest", "heart", "rib", "lung", "gut",
+  "belly", "navel", "back", "spine", "butt", "tailbone", "hip", "groin", "thigh", "hamstring",
+  "knee", "kneecap", "shin", "calf", "ankle", "heel", "foot", "sole", "toe", "big toe",
+  "fingernail", "knuckle", "hand", "palm", "wrist", "elbow", "bicep", "tricep", "arm", "armpit",
+  "eyebrow", "eyelid", "eyelash", "pupil", "cornea", "earlobe", "temple", "nostril", "lip", "uvula",
+  "tonsil", "voice box", "diaphragm", "liver", "spleen", "kidney", "intestine", "pancreas", "buttcheek", "toe knuckle",
+  "thumb", "index finger", "middle finger", "ring finger", "pinky", "cuticle", "shoulder blade", "clavicle", "kneepit", "achilles tendon",
+  "brain", "skullcap", "face", "hair", "scalp", "spinal cord", "tail", "femur", "shinbone", "ankle bone",
+  "nose bridge", "jawline", "ear canal", "rear end", "back of the knee", "lower back", "flank", "nape", "groove of the elbow", "fanny",  "orbital socket", "temporal lobe", "nasal cartilage", "mandible", "masseter muscle", "zygomatic arch", "trachea", "larynx", "uvula", "soft palate",
+  "hard palate", "canine tooth", "incisor", "molars", "retina", "pupil", "cornea", "sclera", "eyelid", "lacrimal gland",
+  "ear canal", "cochlea", "eardrum", "jaw hinge", "carotid artery", "jugular vein", "sternocleidomastoid", "clavicle", "scapula", "sternum",
+  "xiphoid process", "pectoralis major", "nipple", "areola", "intercostal muscle", "rib cage", "diaphragm", "spinal cord", "thoracic vertebra", "lumbar vertebra",
+  "iliac crest", "sacroiliac joint", "coccyx", "gluteus maximus", "gluteus medius", "ischial tuberosity", "femoral artery", "femoral nerve", "quadriceps tendon", "patella",
+  "patellar tendon", "tibial plateau", "fibula", "medial malleolus", "lateral malleolus", "plantar fascia", "Achilles tendon", "calcaneus", "metatarsals", "phalanges (toe)",
+  "hamstring origin", "sciatic nerve", "iliopsoas", "inguinal ligament", "rectus abdominis", "obliques", "transversus abdominis", "biceps brachii", "brachialis", "triceps tendon",
+  "ulna", "radius", "olecranon", "carpal bones", "metacarpals", "proximal phalanx", "distal phalanx", "cuticle", "thenar eminence", "hypothenar eminence",
+  "deltoid insertion", "acromion process", "supraspinatus", "infraspinatus", "rotator cuff", "axilla", "cubital fossa", "median nerve", "brachial artery", "epicondyle",
+  "scalp", "fontanelle", "sagittal suture", "occipital bone", "ethmoid bone", "palatine bone", "nasal septum", "tonsils", "epiglottis", "hyoid bone"
+];
+
+
+const objects = [
+  "shoe", "dictionary", "scroll", "ham sandwich", "rubber chicken", "cinder block", "pickle jar", "ladle", "rolling pin", "tuning fork",
+  "bar of soap", "sack of flour", "cane", "toothbrush", "nail file", "umbrella", "mop", "plunger", "feather duster", "boot",
+  "frying pan", "anvil", "lawn chair", "typewriter", "brick", "vase", "fish", "cabbage", "pumpkin", "glove",
+  "chalkboard eraser", "snow globe", "bucket of eels", "accordion", "sledgehammer", "quill", "scroll of sins", "meatball", "slipper", "banana",
+  "axe handle", "candy cane", "light bulb", "spatula", "meat cleaver", "foam finger", "tv remote", "tax code book", "plank", "baseball bat",
+  "pineapple", "pogo stick", "inflatable duck", "sword", "dagger", "scroll of pain", "old boot", "rock", "sock full of quarters", "dented trombone",
+  "panini press", "golf club", "spiked collar", "purse", "casserole dish", "flagpole", "oven mitt", "bag of sand", "expired coupon book", "hockey puck",
+  "doorknob", "bagpipe", "loaf of bread", "wet sponge", "pair of tongs", "shovel", "bucket of paint", "rat trap", "mousetrap", "spiked shield",
+  "stapler", "binder", "maraca", "flamingo statue", "cheese grater", "deck of cards", "TV antenna", "rusty saw", "barbecue fork", "rotisserie chicken",
+  "birdcage", "tennis racket", "bicycle pump", "chessboard", "iron", "vuvuzela", "light saber", "fake mustache", "bent spoon", "brick of ramen", "crowbar", "sledgehammer", "meat cleaver", "rusty axe", "steel pipe", "brick", "baseball bat with nails", "ice pick", "broken bottle", "machete",
+  "chainsaw", "fire poker", "barbed wire bat", "metal rod", "hatchet", "shiv", "drill", "garden shears", "wrench", "combat boot",
+  "rebar", "nail gun", "cattle prod", "machete blade", "lead pipe", "busted mirror shard", "sharpened screwdriver", "tire iron", "spiked club", "bone saw",
+  "punch dagger", "broken femur", "padlock on a chain", "razor blade", "bayonet", "branding iron", "wooden stake", "pickaxe", "masonry chisel", "skinning knife",
+  "bolt cutter", "blacksmith's hammer", "rock wrapped in wire", "steel chain", "rusted wrench", "brick in a sock", "shard of porcelain", "angle grinder", "hot rebar", "railroad spike",
+  "fire extinguisher", "steel mallet", "pipe wrench", "busted shovel", "snow shovel", "iron skillet", "steel gauntlet", "drill bit", "sawed-off crutch", "circular saw blade",
+  "gear sprocket", "sledge weight", "concrete slab", "tangle of wires", "box cutter", "splintered bat", "hacksaw", "brick corner", "steel-toed boot", "toolbox lid",
+  "broken scythe", "steel beam", "engine block", "metal drawer", "brake rotor", "rebar hook", "rusty hinge", "iron pipe elbow", "bike chain", "scrap metal sheet",
+  "industrial spring", "gas tank lid", "drill handle", "metal doorstop", "furnace grate", "iron vent cover", "bullet casing", "flanged mace", "cinderblock shard", "smashed computer tower",
+  "desk leg", "cast iron plate", "heavy duty stapler", "car battery", "anvil shard", "jack handle", "power tool casing", "conduit rod", "coil spring", "nail-studded board"
+  
+  
+
+
+];
+
+
+function randomFrom(list) {
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+function attackRaspberry() {
+  const action = randomFrom(actions);
+  const bodyPart = randomFrom(bodyParts);
+  const object = randomFrom(objects);
+  const message = `You ${action} Raspberry in the ${bodyPart} with a ${object}.`;
+  document.getElementById('raspberry-attack').textContent = message;
+
+  // Red flash
+  const flash = document.getElementById('red-flash');
+  flash.classList.add('flash');
+  setTimeout(() => flash.classList.remove('flash'), 150);
+
+  // Counter logic
+  if (!counterShown) {
+    document.getElementById('raspberry-counter').style.display = 'block';
+    counterShown = true;
+  }
+
+  raspberryPunished++;
+  document.getElementById('raspberry-count').textContent = raspberryPunished;
+
+  // Scream
+  const screamNumber = Math.floor(Math.random() * screamCount) + 1;
+  const screamPlayer = document.getElementById('scream-player');
+  screamPlayer.src = `s${screamNumber}.wav`;
+  screamPlayer.play().catch(e => console.warn('Scream failed to play:', e));
+
+  // 🎯 120 punishment event trigger
+  if (raspberryPunished === 120) {
+    const lords = document.getElementById('libertines');
+    lords.style.display = 'flex';
+    setTimeout(() => {
+      lords.classList.add('animate');
+    }, 100);
+
+    const banner = document.getElementById('achievement-banner');
+    banner.style.display = 'block';
+    banner.style.opacity = '1';
+
+    setTimeout(() => {
+      banner.style.opacity = '0';
+    }, 4000);
+
+    setTimeout(() => {
+      banner.style.display = 'none';
+    }, 6000);
+  }
+}
+</script>
+
+<a href="index.html">Home</a>
 </body>
 </html>
