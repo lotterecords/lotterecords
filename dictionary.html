@@ -344,12 +344,12 @@ function attackRaspberry() {
   const message = `You ${action} Raspberry in the ${bodyPart} with a ${object}.`;
   document.getElementById('raspberry-attack').textContent = message;
 
-  // Show red flash
+  // Red flash
   const flash = document.getElementById('red-flash');
   flash.classList.add('flash');
   setTimeout(() => flash.classList.remove('flash'), 150);
 
-  // Show and increment counter
+  // Counter logic
   if (!counterShown) {
     document.getElementById('raspberry-counter').style.display = 'block';
     counterShown = true;
@@ -357,32 +357,33 @@ function attackRaspberry() {
 
   raspberryPunished++;
   document.getElementById('raspberry-count').textContent = raspberryPunished;
-  // Play random scream
-const screamNumber = Math.floor(Math.random() * screamCount) + 1;
-const screamPlayer = document.getElementById('scream-player');
-screamPlayer.src = `s${screamNumber}.wav`;  // or "sounds/screamX.wav" if in subfolder
-screamPlayer.play().catch(e => console.warn('Scream failed to play:', e));
-}
-if (raspberryPunished === 120) {
-  const lords = document.getElementById('libertines');
-  lords.style.display = 'flex';
-  setTimeout(() => {
-    lords.classList.add('animate');
-  }, 100);
-  // Show achievement banner
-const banner = document.getElementById('achievement-banner');
-banner.style.display = 'block';
-banner.style.opacity = '1';
 
-// Fade out after 4 seconds
-setTimeout(() => {
-  banner.style.opacity = '0';
-}, 4000);
+  // Scream
+  const screamNumber = Math.floor(Math.random() * screamCount) + 1;
+  const screamPlayer = document.getElementById('scream-player');
+  screamPlayer.src = `s${screamNumber}.wav`;
+  screamPlayer.play().catch(e => console.warn('Scream failed to play:', e));
 
-// Hide completely after fade (6 seconds total)
-setTimeout(() => {
-  banner.style.display = 'none';
-}, 6000);
+  // 🎯 120 punishment event trigger
+  if (raspberryPunished === 120) {
+    const lords = document.getElementById('libertines');
+    lords.style.display = 'flex';
+    setTimeout(() => {
+      lords.classList.add('animate');
+    }, 100);
+
+    const banner = document.getElementById('achievement-banner');
+    banner.style.display = 'block';
+    banner.style.opacity = '1';
+
+    setTimeout(() => {
+      banner.style.opacity = '0';
+    }, 4000);
+
+    setTimeout(() => {
+      banner.style.display = 'none';
+    }, 6000);
+  }
 }
 </script>
 
