@@ -83,7 +83,11 @@
   width: 500px;  /* or 32px, depending on your needs */
   image-rendering: pixelated;
 }
-
+.word.toggle {
+  cursor: pointer;
+  color: darkblue;
+  text-decoration: underline;
+}
   </style>
 </head>
 <body>
@@ -148,7 +152,7 @@
   </a>, at your own discretion, if you find the definitions below are not to your liking.
 </h3>
   
-  <h4>You may sort by date or alphabetically.</h4>
+  <h4>You may sort by date or alphabetically, or click here to return <a href="index.html">home</a>.</h4>
 
   <div id="raspberry-attack" style="color: darkred; font-weight: bold; margin-bottom: 1em;"></div>
 
@@ -205,7 +209,7 @@ function render(list) {
   const entriesDiv = document.getElementById('entries');
   entriesDiv.innerHTML = '';
 
-  for (const e of list) {
+  for (const [i, e] of list.entries()) {
     const lines = e.definition.split('\n').filter(line => line.trim() !== '');
 
     let intro = '';
@@ -231,15 +235,18 @@ function render(list) {
       }
     }
 
-    entriesDiv.innerHTML += `
+    const entryHTML = `
       <div class="entry">
-        <div class="word">${e.word}</div>
+        <div class="word toggle" onclick="toggleDefinition(${i})">${e.word}</div>
         <div class="date">${e.date}</div>
-        <div class="intro">${intro.trim()}</div>
-        ${example ? `<div class="definition"><strong>Example sentence:</strong><br>${example}</div>` : ''}
-        ${def ? `<div class="definition"><strong>Definition:</strong><br>${def}</div>` : ''}
+        <div class="definition-content" id="definition-${i}" style="display: none;">
+          <div class="intro">${intro.trim()}</div>
+          ${example ? `<div class="definition"><strong>Example sentence:</strong><br>${example}</div>` : ''}
+          ${def ? `<div class="definition"><strong>Definition:</strong><br>${def}</div>` : ''}
+        </div>
       </div>
     `;
+    entriesDiv.innerHTML += entryHTML;
   }
 }
 
@@ -257,6 +264,14 @@ function render(list) {
   </script>
 
 <script>
+function toggleDefinition(index) {
+  const def = document.getElementById(`definition-${index}`);
+  if (def.style.display === 'none') {
+    def.style.display = 'block';
+  } else {
+    def.style.display = 'none';
+  }
+}
 const screamCount = 20;
 let raspberryPunished = 0;
 let counterShown = false;
