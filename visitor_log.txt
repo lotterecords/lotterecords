@@ -1,0 +1,1 @@
+/home/nickdelc/visitor-tracker/visitor_log.txt
