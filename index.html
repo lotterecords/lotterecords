@@ -190,6 +190,16 @@ messagesDiv.prepend(msgEl);
   const formattedDate = now.toLocaleDateString(undefined, options);
   document.getElementById('neologism-heading').textContent = `The 9 A.M. Neologism for ${formattedDate}`;
 </script>
+<script>
+fetch("https://visitorlog.lotterecords.com/log", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    url: window.location.href,
+    ua: navigator.userAgent
+  })
+});
+</script>
 </body>
 
 </html>
